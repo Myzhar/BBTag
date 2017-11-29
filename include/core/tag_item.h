@@ -15,7 +15,8 @@ class TagItem : public QObject, public QStandardItem
 
 public:
     // structure provided for convenience
-    struct Elements {
+    struct Elements
+    {
         QColor _color;
         QString _label;
         QString _fullpath;
@@ -108,15 +109,15 @@ private:
 /************************* inline *************************/
 
 void TagItem::add_tag(
-        const QRect& bbox
-    )
+    const QRect& bbox
+)
 {
     bbox_.append( bbox );
 }
 
 void TagItem::remove_tag(
-        const QRect& bbox
-    )
+    const QRect& bbox
+)
 {
     bbox_.removeOne( bbox );
 }
@@ -142,19 +143,21 @@ const QColor& TagItem::color() const
 }
 
 void TagItem::set_label(
-        const QString& name
-    )
+    const QString& name
+)
 {
-    if( !name.isEmpty() ) {
+    if( !name.isEmpty() )
+    {
         tag_label_ = name;
     }
 }
 
 void TagItem::set_color(
-        const QColor& color
-    )
+    const QColor& color
+)
 {
-    if( color.isValid() ) {
+    if( color.isValid() )
+    {
         tag_color_ = color;
     }
 }

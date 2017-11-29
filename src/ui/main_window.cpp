@@ -27,7 +27,7 @@
 
 MainWindow::MainWindow(
         QWidget *parent
-    ) : QMainWindow( parent )
+        ) : QMainWindow( parent )
 {
     setWindowIcon( QIcon( ":/icon/bbtag.png" ) );
 
@@ -355,7 +355,7 @@ void MainWindow::remove_images()
 
 QString MainWindow::get_image_from_index_list(
         const QModelIndexList& index_list
-    ) const
+        ) const
 {
     QString reference_fullpath;
     for( QModelIndexList::const_iterator idx_itr = index_list.begin(); idx_itr != index_list.end(); ++idx_itr ) {
@@ -386,10 +386,10 @@ void MainWindow::show_context_menu( const QPoint& pos )
     QModelIndex index = tag_view_->indexAt( pos );
 
     if( index.isValid() &&
-        index.parent() == tag_view_->rootIndex() &&
-        tag_model_->get_label( index ) != TagModel::UNTAGGED &&
-        tag_model_->get_label( index ) != TagModel::ALL
-    ) {
+            index.parent() == tag_view_->rootIndex() &&
+            tag_model_->get_label( index ) != TagModel::UNTAGGED &&
+            tag_model_->get_label( index ) != TagModel::ALL
+            ) {
         selected_for_context_ = index;
         context_menu_->exec( tag_view_->mapToGlobal( pos ) );
     }
@@ -437,7 +437,7 @@ void MainWindow::pop_up_file_dialog(
         QString& filename,
         QString& relative_dir,
         QFileDialog::AcceptMode mode
-    )
+        )
 {
     QDialog file_dialog( this );
     QLabel* file_label = new QLabel( &file_dialog );
@@ -581,7 +581,7 @@ void MainWindow::load_xml(
         const QString& filename,
         const QString& relative_dir,
         bool merge
-    )
+        )
 {
     QFile file( filename );
     if( !file.open( QFile::ReadOnly | QFile::Text ) ) {
@@ -606,7 +606,7 @@ void MainWindow::save_xml(
         const QString& filename,
         const QString& relative_dir,
         const QModelIndexList& selection
-    )
+        )
 {
     QFile file( filename );
     if( !file.open( QFile::WriteOnly | QFile::Text ) ) {
@@ -657,7 +657,7 @@ void MainWindow::show_credits()
 
 void MainWindow::pop_up_html_dialog(
         const QUrl& url
-    )
+        )
 {
     QDialog html_dialog( this );
 
@@ -783,7 +783,7 @@ void MainWindow::set_viewer_tag_options()
 // hence these 2 slots
 void MainWindow::enable_tag(
         bool activate
-    )
+        )
 {
     if( activate ) {
         tag_viewer_->set_untagging_status( false );
@@ -797,7 +797,7 @@ void MainWindow::enable_tag(
 // hence these 2 slots
 void MainWindow::enable_untag(
         bool activate
-    )
+        )
 {
     if( activate ) {
         tag_viewer_->set_tagging_status( false );
@@ -808,7 +808,7 @@ void MainWindow::enable_untag(
 
 void MainWindow::tag_image(
         const QRect& bbox
-    )
+        )
 {
     // ensure and get the single image referenced in the selection
     QItemSelectionModel* selection_model = tag_view_->selectionModel();
@@ -852,7 +852,7 @@ void MainWindow::tag_image(
 void MainWindow::untag_image(
         const QString& label,
         const QRect& bbox
-    )
+        )
 {
     if( label.isEmpty() ) {
         return;

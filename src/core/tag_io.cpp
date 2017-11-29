@@ -25,18 +25,20 @@ const QString TagIO::HEIGHT = "height";
 
 
 void TagIO::write_xml(
-        QIODevice* out,
-        const QString& relative_dir,
-        const QHash<QString, QColor>& tag_color_dict,
-        const QHash< QString, QList<TagItem::Elements> >& elts
-    )
+    QIODevice* out,
+    const QString& relative_dir,
+    const QHash<QString, QColor>& tag_color_dict,
+    const QHash< QString, QList<TagItem::Elements> >& elts
+)
 {
-    if( !out ) {
+    if( !out )
+    {
         return;
     }
 
     QDir dir;
-    if( !relative_dir.isEmpty() ) {
+    if( !relative_dir.isEmpty() )
+    {
         dir = QDir( relative_dir ).absolutePath();
     }
 
@@ -49,7 +51,8 @@ void TagIO::write_xml(
     xml.writeTextElement( NAME, "dataset containing bounding box labels on images" );
     xml.writeTextElement( COMMENT, "created by BBTag" );
     xml.writeStartElement( TAGS );
-    for( QHash<QString, QColor>::const_iterator c_itr = tag_color_dict.begin(); c_itr != tag_color_dict.end(); ++c_itr ) {
+    for( QHash<QString, QColor>::const_iterator c_itr = tag_color_dict.begin(); c_itr != tag_color_dict.end(); ++c_itr )
+    {
         xml.writeEmptyElement( SINGLE_TAG );
         xml.writeAttribute( NAME, c_itr.key() );
         xml.writeAttribute( COLOR, c_itr.value().name() );
@@ -62,24 +65,28 @@ void TagIO::write_xml(
     progress.setWindowModality( Qt::WindowModal );
     int c = 0;
 
-    for( QHash< QString, QList<TagItem::Elements> >::const_iterator img_itr = elts.begin(); img_itr != elts.end(); ++img_itr ) {
+    for( QHash< QString, QList<TagItem::Elements> >::const_iterator img_itr = elts.begin(); img_itr != elts.end(); ++img_itr )
+    {
         progress.setValue( c++ );
 
         QString fullpath = img_itr.key();
         const QList<TagItem::Elements>& tags = img_itr.value();
 
-        if( !relative_dir.isEmpty() && dir.exists() ) {
+        if( !relative_dir.isEmpty() && dir.exists() )
+        {
             fullpath = dir.relativeFilePath( fullpath );
         }
 
         xml.writeStartElement( SINGLE_IMAGE );
         xml.writeAttribute( PATH, fullpath );
 
-        for( QList<TagItem::Elements>::const_iterator tag_itr = tags.begin(); tag_itr != tags.end(); ++tag_itr ) {
+        for( QList<TagItem::Elements>::const_iterator tag_itr = tags.begin(); tag_itr != tags.end(); ++tag_itr )
+        {
             const TagItem::Elements& elt = *tag_itr;
             const QList<QRect>& bboxes = elt._bbox;
 
-            for( QList<QRect>::const_iterator bbox_itr = bboxes.begin(); bbox_itr != bboxes.end(); ++bbox_itr ) {
+            for( QList<QRect>::const_iterator bbox_itr = bboxes.begin(); bbox_itr != bboxes.end(); ++bbox_itr )
+            {
                 const QRect& bbox = *bbox_itr;
 
                 xml.writeStartElement( BOX );
@@ -103,43 +110,51 @@ void TagIO::write_xml(
 }
 
 bool TagIO::read_xml(
-        QIODevice* in,
-        const QString& relative_dir,
-        QHash< QString, QList<TagItem::Elements> >& elts
-    )
+    QIODevice* in,
+    const QString& relative_dir,
+    QHash< QString, QList<TagItem::Elements> >& elts
+)
 {
-    if( !in ) {
+    if( !in )
+    {
         return false;
     }
 
     QDir dir;
-    if( !relative_dir.isEmpty() ) {
+    if( !relative_dir.isEmpty() )
+    {
         dir = QDir( relative_dir ).absolutePath();
     }
 
     QXmlStreamReader xml;
     xml.setDevice( in );
 
-    if( xml.readNext() == QXmlStreamReader::StartDocument && !xml.isStartDocument() ) {
+    if( xml.readNext() == QXmlStreamReader::StartDocument && !xml.isStartDocument() )
+    {
         return false;
     }
 
-    if( !xml.readNextStartElement() ) {
+    if( !xml.readNextStartElement() )
+    {
         return false;
     }
 
-    if( xml.name() != DATASET ) {
+    if( xml.name() != DATASET )
+    {
         return false;
     }
 
     // skip info for user
-    while( xml.readNextStartElement() && ( xml.name() != IMAGES && xml.name() != TAGS ) ) {
+    while( xml.readNextStartElement() && ( xml.name() != IMAGES && xml.name() != TAGS ) )
+    {
         xml.skipCurrentElement();
     }
 
     QHash<QString, QColor> tag_color_dict;
-    if( xml.name() == TAGS ) {
-        while( xml.readNextStartElement() && xml.name() == SINGLE_TAG ) {
+    if( xml.name() == TAGS )
+    {
+        while( xml.readNextStartElement() && xml.name() == SINGLE_TAG )
+        {
             tag_color_dict[ xml.attributes().value( NAME ).toString() ] = QColor( xml.attributes().value( COLOR ).toString() );
             // empty elements are directly followed by endElement
             // so readNext must be called
@@ -148,24 +163,30 @@ bool TagIO::read_xml(
     }
 
     // within the "images" element
-    while( !xml.atEnd() ) {
-        if( xml.name() == SINGLE_IMAGE ) {
+    while( !xml.atEnd() )
+    {
+        if( xml.name() == SINGLE_IMAGE )
+        {
             QString fullpath = xml.attributes().value( PATH ).toString();
-            if( fullpath.isEmpty() ) {
+            if( fullpath.isEmpty() )
+            {
                 xml.skipCurrentElement();
                 continue;
             }
 
-            if( !relative_dir.isEmpty() && dir.exists() ) {
+            if( !relative_dir.isEmpty() && dir.exists() )
+            {
                 fullpath = dir.absoluteFilePath( fullpath );
             }
 
-            if( !xml.readNextStartElement() ) {
+            if( !xml.readNextStartElement() )
+            {
                 xml.skipCurrentElement();
                 continue;
             }
 
-            while( xml.name() == BOX ) {
+            while( xml.name() == BOX )
+            {
                 QXmlStreamAttributes att =  xml.attributes();
                 QStringRef top = att.value( TOP );
                 QStringRef left = att.value( LEFT );
@@ -178,7 +199,8 @@ bool TagIO::read_xml(
                 QString label = xml.readElementText();
                 skip = skip || ( label.isEmpty() );
 
-                if( skip ) {
+                if( skip )
+                {
                     xml.skipCurrentElement();
                     xml.readNextStartElement();
                     continue;
@@ -192,11 +214,14 @@ bool TagIO::read_xml(
                 elts[ fullpath ].append( elt );
 
                 xml.readNextStartElement();
-                while( xml.isEndElement() ) {
+                while( xml.isEndElement() )
+                {
                     xml.readNextStartElement();
                 }
             }
-        } else {
+        }
+        else
+        {
             xml.readNextStartElement();
         }
     }
@@ -205,11 +230,12 @@ bool TagIO::read_xml(
 }
 
 void TagIO::write_images(
-        const QDir& output_dir,
-        const QHash< QString, QList<TagItem::Elements> >& elts
-    )
+    const QDir& output_dir,
+    const QHash< QString, QList<TagItem::Elements> >& elts
+)
 {
-    if( !output_dir.exists() ) {
+    if( !output_dir.exists() )
+    {
         return;
     }
 
@@ -219,20 +245,24 @@ void TagIO::write_images(
     progress.setWindowModality( Qt::WindowModal );
     int c = 0;
 
-    for( QHash< QString, QList<TagItem::Elements> >::const_iterator img_itr = elts.begin(); img_itr != elts.end(); ++img_itr ) {
+    for( QHash< QString, QList<TagItem::Elements> >::const_iterator img_itr = elts.begin(); img_itr != elts.end(); ++img_itr )
+    {
         progress.setValue( c++ );
 
         QString fullpath = img_itr.key();
         const QList<TagItem::Elements>& tags = img_itr.value();
 
-        for( QList<TagItem::Elements>::const_iterator tag_itr = tags.begin(); tag_itr != tags.end(); ++tag_itr ) {
+        for( QList<TagItem::Elements>::const_iterator tag_itr = tags.begin(); tag_itr != tags.end(); ++tag_itr )
+        {
             const TagItem::Elements& elt = *tag_itr;
             const QList<QRect>& bboxes = elt._bbox;
             const QString& label = elt._label;
 
-            if( !label_counter.contains( label ) ) {
+            if( !label_counter.contains( label ) )
+            {
                 label_counter[ label ] = 0;
-                if( !output_dir.exists( label ) ) {
+                if( !output_dir.exists( label ) )
+                {
                     output_dir.mkdir( label );
                 }
             }
@@ -240,17 +270,20 @@ void TagIO::write_images(
 
             QString ext = QFileInfo( elt._fullpath ).suffix();
             QPixmap pix;
-            if( !pix.load( elt._fullpath ) ) {
+            if( !pix.load( elt._fullpath ) )
+            {
                 continue;
             }
 
-            for( QList<QRect>::const_iterator bbox_itr = bboxes.begin(); bbox_itr != bboxes.end(); ++bbox_itr ) {
+            for( QList<QRect>::const_iterator bbox_itr = bboxes.begin(); bbox_itr != bboxes.end(); ++bbox_itr )
+            {
                 QPixmap cropped = pix.copy( *bbox_itr );
                 cropped.save( subdir.absoluteFilePath( label + "_" + QString::number( ++label_counter[ label ] ) + "." + ext ) );
             }
         }
 
-        if( progress.wasCanceled() ) {
+        if( progress.wasCanceled() )
+        {
             break;
         }
     }

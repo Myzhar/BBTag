@@ -21,8 +21,8 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(
-        QWidget* parent = 0
-    );
+            QWidget* parent = 0
+            );
 
     virtual ~MainWindow();
 
@@ -40,8 +40,8 @@ public slots:
     // show the contextual menu only for label
     // ability to change label color and name
     void show_context_menu(
-        const QPoint& pos
-    );
+            const QPoint& pos
+            );
 
     // pop-up color selector for the label that
     // was right-clicked
@@ -86,44 +86,44 @@ protected slots:
 
     // update the viewer with the proper tag status
     void enable_tag(
-        bool activate
-    );
+            bool activate
+            );
 
     // update the viewer with the proper untag status
     void enable_untag(
-        bool activate
-    );
+            bool activate
+            );
 
     // tag the current image (if valid selection)
     // with the given bounding box
     void tag_image(
-        const QRect& bbox
-    );
+            const QRect& bbox
+            );
 
     // untag the current image (if valid selection)
     // with the given bounding box and label
     // label is used to know which tag to remove
     // (because we can have multi-label selection)
     void untag_image(
-        const QString& label,
-        const QRect& bbox
-    );
+            const QString& label,
+            const QRect& bbox
+            );
 
     // loads the given XML file
     // if merge is off, clears the current tree first
     void load_xml(
-        const QString& filename,
-        const QString& relative_dir,
-        bool merge
-    );
+            const QString& filename,
+            const QString& relative_dir,
+            bool merge
+            );
 
     // saves tag as XML file
     // if no selection is provided, save all items
     void save_xml(
-        const QString& filename,
-        const QString& relative_dir,
-        const QModelIndexList& selection
-    );
+            const QString& filename,
+            const QString& relative_dir,
+            const QModelIndexList& selection
+            );
 
 protected:
     // returns the list of supported image format files
@@ -135,20 +135,20 @@ protected:
     // return the fullpath of the selected image.
     // if more than one, returns null.
     QString get_image_from_index_list(
-        const QModelIndexList& index_list
-    ) const;
+            const QModelIndexList& index_list
+            ) const;
 
     // build and popup the custom XML file dialog
     // use mode to choose whether it's a save or open file dialog
     void pop_up_file_dialog(
-        QString& filename,
-        QString& relative_dir,
-        QFileDialog::AcceptMode mode
-    );
+            QString& filename,
+            QString& relative_dir,
+            QFileDialog::AcceptMode mode
+            );
 
     void pop_up_html_dialog(
-        const QUrl& url
-    );
+            const QUrl& url
+            );
 
 private:
     QFileSystemModel* dir_model_;

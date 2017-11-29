@@ -178,8 +178,8 @@ private:
 /************************* inline *************************/
 
 void TagModel::attach(
-        QAbstractItemView* view
-    )
+    QAbstractItemView* view
+)
 {
     view->setModel( model_ );
 }
